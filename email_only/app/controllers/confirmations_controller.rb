@@ -30,27 +30,27 @@ class ConfirmationsController < Devise::ConfirmationsController
       redirect_to :unconfirmed
     end
   end
-  
+
   def show
     with_unconfirmed_confirmable do
       confirmable_user.blank_password? ? do_show : do_confirm
     end
     unless confirmable_user.errors.empty?
       self.resource = confirmable_user
-      render 'devise/confirmations/new' 
+      render 'devise/confirmations/new'
     end
   end
-  
+
   protected
 
   def confirmation_token
     @confirmation_token ||= params["user"] && params["user"]["confirmation_token"] || params["confirmation_token"]
   end
-  
+
   def confirmable_user
     @confirmable_user ||= User.find_or_initialize_with_error_by(:confirmation_token, confirmation_token)
   end
-    
+
   def with_unconfirmed_confirmable
     unless confirmable_user.new_record?
       confirmable_user.only_if_unconfirmed {yield}
@@ -63,7 +63,7 @@ class ConfirmationsController < Devise::ConfirmationsController
   end
 
   def do_confirm
-    confirmable_user.confirm!
+    confirmable_user.confirm
     set_flash_message :notice, :confirmed
     sign_in_and_redirect(resource_name, confirmable_user)
   end
