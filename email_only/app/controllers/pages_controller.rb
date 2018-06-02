@@ -3,19 +3,20 @@ class PagesController < ApplicationController
 
   before_filter :authenticate_user!, except: [:home, :unconfirmed]
   before_filter :confirm_user!, except: [:home, :protected, :unconfirmed]
-  
+
   def home
   end
 
   def protected
   end
-  
+
   def protected_until_confirmed
   end
 
   def unconfirmed
+    @email_record ||= current_user.multi_email.current_email_record
   end
-  
+
   # GET /pages
   # GET /pages.json
   def index
@@ -86,7 +87,7 @@ class PagesController < ApplicationController
     def page_params
       params[:page]
     end
-    
+
     def confirm_user!
       unless current_user.confirmed?
         redirect_to unconfirmed_path

@@ -23,7 +23,8 @@ class ConfirmationsController < Devise::ConfirmationsController
   end
 
   def confirm_user
-    if confirmation_token && (@confirmable_user = User.find_by(:confirmation_token => confirmation_token))
+    binding.pry
+    if confirmation_token && confirmation_email_id && confirmable_user
       do_show
     else
       flash[:error] = "Invalid confirmation token"
@@ -35,6 +36,7 @@ class ConfirmationsController < Devise::ConfirmationsController
     with_unconfirmed_confirmable do
       confirmable_user.blank_password? ? do_show : do_confirm
     end
+
     unless confirmable_user.errors.empty?
       self.resource = confirmable_user
       render 'devise/confirmations/new'
@@ -44,11 +46,16 @@ class ConfirmationsController < Devise::ConfirmationsController
   protected
 
   def confirmation_token
-    @confirmation_token ||= params["user"] && params["user"]["confirmation_token"] || params["confirmation_token"]
+    @confirmation_token ||= params["email"] && params["email"]["confirmation_token"] || params["confirmation_token"]
+  end
+
+  def confirmation_email_id
+    @confirmation_email_id ||= params["email"] && params["email"]["id"] || params["email_id"]
   end
 
   def confirmable_user
-    @confirmable_user ||= User.find_or_initialize_with_error_by(:confirmation_token, confirmation_token)
+    @confirmable_user ||=
+    User.joins(:emails).where( emails: { confirmation_token: confirmation_token, id: confirmation_email_id }).first
   end
 
   def with_unconfirmed_confirmable
