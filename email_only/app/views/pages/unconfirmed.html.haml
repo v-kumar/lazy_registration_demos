@@ -5,13 +5,13 @@
 
 %p You may also paste your confirmation token here:
 
-= form_for :user, :url => confirm_user_path do |f|
+= form_for @email_record, method: :post, :url => confirm_user_path do |f|
   %div
     = f.label :confirmation_token,'Confirmation Token:'
     = f.text_field :confirmation_token
+    = f.hidden_field :id
+    = f.hidden_field :email
 
   %div{style: "margin-top: 25px"}= f.submit "Confirm", class: 'btn btn-large btn-primary'
 
 %a{href: root_path, class: 'btn'} Home
-
-  

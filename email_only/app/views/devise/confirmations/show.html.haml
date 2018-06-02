@@ -1,8 +1,10 @@
 %h2 Account Activation
+- binding.pry
 for #{resource.email}
 = form_for resource, :as => resource_name, :url => update_user_confirmation_path, :html => {:method => 'put'}, :id => 'activation-form' do |f|
   = devise_error_messages!
   = hidden_field_tag :confirmation_token, @confirmation_token
+  = hidden_field_tag :email_id,           @confirmation_email_id
   %div
     = f.label :password,'Choose a Password:'
     = f.password_field :password
