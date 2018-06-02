@@ -3,17 +3,17 @@ LazyRegistration::Application.routes.draw do
 
   as :user do
       match '/user/confirmation' => 'confirmations#update', :via => :put, :as => :update_user_confirmation
-      match '/user/confirm' => 'confirmations#confirm_user', :via => :post, :as => :confirm_user
+      match '/user/confirm' => 'confirmations#confirm_user', :via => [:post, :patch], :as => :confirm_user
   end
 
-  as :pages do 
+  as :pages do
     get '/protected' => 'pages#protected', as: :protected
     get '/protected_until_confirmed' => 'pages#protected_until_confirmed', as: :protected_until_confirmed
     get '/unconfirmed' => 'pages#unconfirmed', as: :unconfirmed
   end
-  
+
   root 'pages#home'
-  
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
