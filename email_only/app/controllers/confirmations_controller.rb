@@ -23,7 +23,6 @@ class ConfirmationsController < Devise::ConfirmationsController
   end
 
   def confirm_user
-    binding.pry
     if confirmation_token && confirmation_email_id && confirmable_user
       do_show
     else
